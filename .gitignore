@@ -1,3 +1,7 @@
+conditions.csv
+fma_metadata/*
+spark-env/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
