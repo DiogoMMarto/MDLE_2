@@ -56,7 +56,7 @@ def calculate_association_rules(support_k: RDD, support_k_plus_1: RDD, items_cou
         interest = confidence - p_consequent
         lift = confidence / p_consequent
         
-        return f"{antecedent}->{consequent}\t{' '}\t{lift}\t{confidence}\t{interest}" , lift
+        return f"{antecedent}->{consequent}\t{'REPLACE'}\t{lift}\t{confidence}\t{interest}" , lift
         
     res = (support_k_plus_1
            .flatMap(
@@ -77,7 +77,7 @@ def calculate_association_rules(support_k: RDD, support_k_plus_1: RDD, items_cou
     res = (res.map(lambda x: (x[0], (x[1] - min_lift)/(max_lift - min_lift)))
             .filter(lambda x: x[1] >= lift_threshold)
             .sortBy(lambda x: x[1], ascending=False)
-            .map(lambda x: x[0].replace(' ', str(x[1])))
+            .map(lambda x: x[0].replace('REPLACE', str(x[1])))
     )
     
     return res.collect()
@@ -90,7 +90,6 @@ def main():
     argparser.add_argument("-t", "--topN", type=int, default=10, help="Number of top items to consider")
     argparser.add_argument("-s", "--support", type=int, default=1000, help="Support threshold")
     argparser.add_argument("-l", "--lift", type=float, default=0.2, help="Lift threshold")
-    argparser.add_argument("-i","--number_iterations", type=int, default=3, help="Number of iterations for the algorithm")
     args = argparser.parse_args()
     
     in_file = sc.textFile(args.input_file)
@@ -99,14 +98,14 @@ def main():
     in_file = in_file.map(lambda x: x.split(","))
     in_file = in_file.map(lambda x: (x[2], int(x[4]))) # (user_id, condition)
 
-    itemsets_base = in_file.groupByKey().mapValues(list).map(lambda x: list(set(x[1])))
-    
+    itemsets_base = in_file.groupByKey().mapValues(list).map(lambda x: list(set(x[1]))) # (conditions)
+        
     support_1 = (itemsets_base
                     .flatMap(lambda x: [(x[i], 1) for i in range(len(x))])
                     .reduceByKey(lambda x, y: x + y)
                     .filter(lambda x: x[1] >= args.support)
-    )
-    frequent_items = support_1.map(lambda x: x[0])
+    ) # ( condition, count )
+    frequent_items = support_1.map(lambda x: x[0]) # ( condition )
     print(f"Frequent items count: {frequent_items.count()}")
     top_items = support_1.takeOrdered(args.topN, key=lambda x: -x[1])
     with open(args.output_file_1, "w") as f:
@@ -114,13 +113,13 @@ def main():
         for item in top_items:
             f.write(f"{item[0]}\t{item[1]}\n")
     
-    b_frequent_items = sc.broadcast(set(frequent_items.collect()))
+    b_frequent_items = sc.broadcast(set(frequent_items.collect())) # ( condition )
     itemsets_2 = (itemsets_base
-                    .map(lambda x: [x for x in x if x in b_frequent_items.value])
+                    .map(lambda x: [i for i in x if i in b_frequent_items.value])
                     .filter(lambda x: len(x) > 1)
-    )
+                    .flatMap(lambda x: [tuple(sorted(pair)) for pair in combinations(x, 2)])
+    )  # (conditions) -> [( condition1, condition2) , ( condition2, condition3) , ...] -> ( condition1, condition2) , ( condition2, condition3) 
     support_2 = (itemsets_2
-                .flatMap(lambda x: [tuple(sorted(pair)) for pair in combinations(x, 2)])
                 .map(lambda x: (x, 1))
                 .reduceByKey(lambda x, y: x + y)
                 .filter(lambda x: x[1] >= args.support)
@@ -135,12 +134,13 @@ def main():
         
     b_frequent_items_2 = sc.broadcast(set(frequent_items_2.collect()))
     itemsets_3 = (itemsets_base
-                    .map(lambda x: [x for x in x if x in b_frequent_items_2.value])
+                    .map(lambda x: [tuple(sorted(pair)) for pair in combinations(x, 2)]) # [( condition1, condition2)]
+                    .map(lambda x: [i for i in x if i in b_frequent_items_2.value])
                     .filter(lambda x: len(x) > 2)
+                    .map(lambda x: list(set([j for i in x for j in i]))) # [conditions]
+                    .flatMap(lambda x: [tuple(sorted(pair)) for pair in combinations(x, 3)]) # [( condition1, condition2, condition3)]
     )
-    
     support_3 = (itemsets_3
-                .flatMap(lambda x: [tuple(sorted(pair)) for pair in combinations(x, 3)])
                 .map(lambda x: (x, 1))
                 .reduceByKey(lambda x, y: x + y)
                 .filter(lambda x: x[1] >= args.support)
