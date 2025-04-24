@@ -32,6 +32,7 @@ Code written with help from automatic code generation tools namely github copilo
 """
 import argparse
 from itertools import combinations
+import os
 from pyspark import RDD, SparkConf, SparkContext
 
 conf = None
