@@ -204,7 +204,7 @@ class BFR:
                 
             def update_cluster(x: tuple[int, Iterable[tuple[int, tuple[int, ndarray]]]],cl_b: Broadcast[list]):
                 fp , it = x
-                cur_cluster = cl_b.value.index(key= lambda x: x[2] == fp)
+                cur_cluster = [cdata for _ , _ , fp2 , cdata in cl_b if fp == fp2 ]
                 cur_cluster = cl_b.value[cur_cluster][3]
                 cluster = SummaryCluster(
                     cur_cluster[0],
