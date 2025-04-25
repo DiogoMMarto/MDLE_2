@@ -84,7 +84,7 @@ def main():
         genre_ranked = (
             genre_counts
             .withColumn("rank", row_number().over(window))
-            .filter(col("rank") <= 5)
+            .filter(col("rank") <= 10)
         )
 
         # Collect top genres per cluster

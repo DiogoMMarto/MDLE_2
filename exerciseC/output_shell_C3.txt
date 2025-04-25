@@ -1,0 +1,56 @@
+.\spark-env\Scripts\spark-submit .\exerciseC\exc3.py .\exerciseC\output_C2.txt .\fma_metadata\tracks.csv .\fma_metadata\genres.csv
+25/04/25 23:18:31 WARN Shell: Did not find winutils.exe: java.io.FileNotFoundException: java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset. -see https://wiki.apache.org/hadoop/WindowsProblems
+25/04/25 23:18:32 INFO SparkContext: Running Spark version 3.5.5
+25/04/25 23:18:32 INFO SparkContext: OS info Windows 11, 10.0, amd64
+25/04/25 23:18:32 INFO SparkContext: Java version 21.0.6
+25/04/25 23:18:32 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+25/04/25 23:18:32 INFO ResourceUtils: ==============================================================
+25/04/25 23:18:32 INFO ResourceUtils: No custom resources configured for spark.driver.
+25/04/25 23:18:32 INFO ResourceUtils: ==============================================================
+25/04/25 23:18:32 INFO SparkContext: Submitted application: Top genres per cluster
+25/04/25 23:18:32 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+25/04/25 23:18:32 INFO ResourceProfile: Limiting resource is cpu
+25/04/25 23:18:32 INFO ResourceProfileManager: Added ResourceProfile id: 0
+25/04/25 23:18:32 INFO SecurityManager: Changing view acls to: kiko
+25/04/25 23:18:32 INFO SecurityManager: Changing modify acls to: kiko
+25/04/25 23:18:32 INFO SecurityManager: Changing view acls groups to:
+25/04/25 23:18:32 INFO SecurityManager: Changing modify acls groups to:
+25/04/25 23:18:32 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: kiko; groups with view permissions: EMPTY; users with modify permissions: kiko; groups with modify permissions: EMPTY
+25/04/25 23:18:32 INFO Utils: Successfully started service 'sparkDriver' on port 57939.
+25/04/25 23:18:32 INFO SparkEnv: Registering MapOutputTracker
+25/04/25 23:18:32 INFO SparkEnv: Registering BlockManagerMaster
+25/04/25 23:18:32 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+25/04/25 23:18:32 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+25/04/25 23:18:32 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+25/04/25 23:18:32 INFO DiskBlockManager: Created local directory at C:\Users\kkiko\AppData\Local\Temp\blockmgr-fd420347-5837-4864-b1d4-be9468f8130a
+25/04/25 23:18:32 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+25/04/25 23:18:32 INFO SparkEnv: Registering OutputCommitCoordinator
+25/04/25 23:18:32 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+25/04/25 23:18:32 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+25/04/25 23:18:32 INFO Executor: Starting executor ID driver on host Kiko.mshome.net
+25/04/25 23:18:32 INFO Executor: OS info Windows 11, 10.0, amd64
+25/04/25 23:18:32 INFO Executor: Java version 21.0.6
+25/04/25 23:18:32 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+25/04/25 23:18:32 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@5c440018 for default.
+25/04/25 23:18:32 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 57940.
+25/04/25 23:18:32 INFO NettyBlockTransferService: Server created on Kiko.mshome.net:57940
+25/04/25 23:18:32 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+25/04/25 23:18:33 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, Kiko.mshome.net, 57940, None)
+25/04/25 23:18:33 INFO BlockManagerMasterEndpoint: Registering block manager Kiko.mshome.net:57940 with 434.4 MiB RAM, BlockManagerId(driver, Kiko.mshome.net, 57940, None)
+25/04/25 23:18:33 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, Kiko.mshome.net, 57940, None)
+25/04/25 23:18:33 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, Kiko.mshome.net, 57940, None)
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|cluster_id|top_genres                                                                                                                                                                                            |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|0         |[{Electronic, 499}, {Experimental, 399}, {Punk, 292}, {Rock, 202}, {Noise, 202}, {Hip-Hop, 200}, {Avant-Garde, 133}, {Experimental Pop, 131}, {Electroacoustic, 112}, {Lo-Fi, 101}]                   |
+|1         |[{Experimental, 652}, {Electronic, 545}, {Rock, 379}, {Punk, 359}, {Avant-Garde, 310}, {Pop, 237}, {Experimental Pop, 233}, {Folk, 225}, {Lo-Fi, 190}, {Noise, 190}]                                  |
+|2         |[{Electronic, 506}, {Experimental, 401}, {Rock, 390}, {Punk, 274}, {Avant-Garde, 197}, {Pop, 157}, {Noise, 153}, {Indie-Rock, 148}, {Experimental Pop, 145}, {Hip-Hop, 145}]                          |
+|3         |[{Experimental, 394}, {Electronic, 243}, {Noise, 183}, {Avant-Garde, 176}, {Electroacoustic, 122}, {Punk, 120}, {Hip-Hop, 95}, {Improv, 93}, {Musique Concrete, 85}, {Experimental Pop, 78}]          |
+|4         |[{Experimental, 407}, {Electronic, 403}, {Noise, 194}, {Avant-Garde, 179}, {Hip-Hop, 158}, {Musique Concrete, 116}, {Electroacoustic, 108}, {Rock, 95}, {Experimental Pop, 88}, {Lo-Fi, 75}]          |
+|5         |[{Experimental, 19989}, {Electronic, 19343}, {Avant-Garde, 6663}, {Ambient, 6617}, {Rock, 6102}, {Noise, 6047}, {Experimental Pop, 5820}, {Folk, 5775}, {Pop, 5418}, {Instrumental, 5281}]            |
+|6         |[{Experimental, 795}, {Electronic, 633}, {Ambient, 464}, {Avant-Garde, 340}, {Soundtrack, 292}, {Ambient Electronic, 290}, {Instrumental, 257}, {Folk, 228}, {Classical, 195}, {Electroacoustic, 183}]|
+|7         |[{Experimental, 45}, {Electroacoustic, 35}, {Avant-Garde, 33}, {Musique Concrete, 31}, {Field Recordings, 30}, {Electronic, 19}, {Old-Time / Historic, 18}, {Rock, 14}, {Noise, 11}, {Spoken, 10}]    |
+|8         |[{Experimental, 1026}, {Electronic, 914}, {Avant-Garde, 460}, {Folk, 393}, {Lo-Fi, 356}, {Experimental Pop, 313}, {Singer-Songwriter, 310}, {Pop, 300}, {Ambient, 293}, {Electroacoustic, 279}]       |
+|9         |[{Experimental, 973}, {Electronic, 920}, {Noise, 399}, {Avant-Garde, 372}, {Rock, 338}, {Electroacoustic, 282}, {Punk, 266}, {Hip-Hop, 261}, {Experimental Pop, 251}, {Pop, 204}]                     |
+|10        |[{Experimental, 692}, {Electronic, 659}, {Avant-Garde, 367}, {Experimental Pop, 362}, {Folk, 282}, {Rock, 261}, {Pop, 250}, {Singer-Songwriter, 231}, {Noise, 208}, {Ambient, 192}]                   |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
