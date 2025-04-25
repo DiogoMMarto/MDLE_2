@@ -1,0 +1,56 @@
+ .\spark-env\Scripts\spark-submit .\exerciseC\exc3.py .\exerciseC\output_C2.txt .\fma_metadata\tracks.csv .\fma_metadata\genres.csv
+25/04/25 23:06:48 WARN Shell: Did not find winutils.exe: java.io.FileNotFoundException: java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset. -see https://wiki.apache.org/hadoop/WindowsProblems
+25/04/25 23:06:49 INFO SparkContext: Running Spark version 3.5.5
+25/04/25 23:06:49 INFO SparkContext: OS info Windows 11, 10.0, amd64
+25/04/25 23:06:49 INFO SparkContext: Java version 21.0.6
+25/04/25 23:06:49 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+25/04/25 23:06:49 INFO ResourceUtils: ==============================================================
+25/04/25 23:06:49 INFO ResourceUtils: No custom resources configured for spark.driver.
+25/04/25 23:06:49 INFO ResourceUtils: ==============================================================
+25/04/25 23:06:49 INFO SparkContext: Submitted application: Top genres per cluster
+25/04/25 23:06:49 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+25/04/25 23:06:49 INFO ResourceProfile: Limiting resource is cpu
+25/04/25 23:06:49 INFO ResourceProfileManager: Added ResourceProfile id: 0
+25/04/25 23:06:49 INFO SecurityManager: Changing view acls to: kiko
+25/04/25 23:06:49 INFO SecurityManager: Changing modify acls to: kiko
+25/04/25 23:06:49 INFO SecurityManager: Changing view acls groups to:
+25/04/25 23:06:49 INFO SecurityManager: Changing modify acls groups to:
+25/04/25 23:06:49 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: kiko; groups with view permissions: EMPTY; users with modify permissions: kiko; groups with modify permissions: EMPTY
+25/04/25 23:06:49 INFO Utils: Successfully started service 'sparkDriver' on port 56593.
+25/04/25 23:06:49 INFO SparkEnv: Registering MapOutputTracker
+25/04/25 23:06:49 INFO SparkEnv: Registering BlockManagerMaster
+25/04/25 23:06:49 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+25/04/25 23:06:49 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+25/04/25 23:06:49 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+25/04/25 23:06:49 INFO DiskBlockManager: Created local directory at C:\Users\kkiko\AppData\Local\Temp\blockmgr-942fddb4-ef6f-49d5-9bd6-bde5fe23f4c7
+25/04/25 23:06:49 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+25/04/25 23:06:49 INFO SparkEnv: Registering OutputCommitCoordinator
+25/04/25 23:06:50 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+25/04/25 23:06:50 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+25/04/25 23:06:50 INFO Executor: Starting executor ID driver on host Kiko.mshome.net
+25/04/25 23:06:50 INFO Executor: OS info Windows 11, 10.0, amd64
+25/04/25 23:06:50 INFO Executor: Java version 21.0.6
+25/04/25 23:06:50 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+25/04/25 23:06:50 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@1a490bd0 for default.
+25/04/25 23:06:50 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 56594.
+25/04/25 23:06:50 INFO NettyBlockTransferService: Server created on Kiko.mshome.net:56594
+25/04/25 23:06:50 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+25/04/25 23:06:50 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, Kiko.mshome.net, 56594, None)
+25/04/25 23:06:50 INFO BlockManagerMasterEndpoint: Registering block manager Kiko.mshome.net:56594 with 434.4 MiB RAM, BlockManagerId(driver, Kiko.mshome.net, 56594, None)
+25/04/25 23:06:50 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, Kiko.mshome.net, 56594, None)
+25/04/25 23:06:50 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, Kiko.mshome.net, 56594, None)
++----------+--------------------------------------------------------------------------------------------------------------+
+|cluster_id|top_genres                                                                                                    |
++----------+--------------------------------------------------------------------------------------------------------------+
+|0         |[{Electronic, 499}, {Experimental, 399}, {Punk, 292}, {Rock, 202}, {Noise, 202}]                              |
+|1         |[{Experimental, 652}, {Electronic, 545}, {Rock, 379}, {Punk, 359}, {Avant-Garde, 310}]                        |
+|2         |[{Electronic, 506}, {Experimental, 401}, {Rock, 390}, {Punk, 274}, {Avant-Garde, 197}]                        |
+|3         |[{Experimental, 394}, {Electronic, 243}, {Noise, 183}, {Avant-Garde, 176}, {Electroacoustic, 122}]            |
+|4         |[{Experimental, 407}, {Electronic, 403}, {Noise, 194}, {Avant-Garde, 179}, {Hip-Hop, 158}]                    |
+|5         |[{Experimental, 19989}, {Electronic, 19343}, {Avant-Garde, 6663}, {Ambient, 6617}, {Rock, 6102}]              |
+|6         |[{Experimental, 795}, {Electronic, 633}, {Ambient, 464}, {Avant-Garde, 340}, {Soundtrack, 292}]               |
+|7         |[{Experimental, 45}, {Electroacoustic, 35}, {Avant-Garde, 33}, {Musique Concrete, 31}, {Field Recordings, 30}]|
+|8         |[{Experimental, 1026}, {Electronic, 914}, {Avant-Garde, 460}, {Folk, 393}, {Lo-Fi, 356}]                      |
+|9         |[{Experimental, 973}, {Electronic, 920}, {Noise, 399}, {Avant-Garde, 372}, {Rock, 338}]                       |
+|10        |[{Experimental, 692}, {Electronic, 659}, {Avant-Garde, 367}, {Experimental Pop, 362}, {Folk, 282}]            |
++----------+--------------------------------------------------------------------------------------------------------------+

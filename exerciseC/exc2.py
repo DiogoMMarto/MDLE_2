@@ -327,12 +327,10 @@ sc = None
 def main():
     argparser = argparse.ArgumentParser(description="Cluster analysis")
     argparser.add_argument("input_file_data", help="Path to data file")
-    argparser.add_argument("input_file_track", help="Path to track file") 
     argparser.add_argument("-k","--num_clusters", type=int, default=11, help="Number of clusters")
     args = argparser.parse_args()
     
     data = pd.read_csv(args.input_file_data, index_col=0, header=[0, 1, 2])
-    tracks = pd.read_csv(args.input_file_track, index_col=0, header=[0, 1])
     
     cols_to_use = [col for col in data.columns if col[1] == 'mean']
     data: pd.DataFrame = data[cols_to_use]
@@ -350,8 +348,11 @@ def main():
         i = 0
         for c in res:
             i = i + 1
-            f.write(f"{i}={str(c.points_index)}\n")
-
+            f.write(f"{str(c.points_index[0])}")
+            for rest in c.points_index[1:]:
+                f.write(","+str(rest))
+            f.write("\n")
+                
 if __name__ == "__main__":
     conf = (SparkConf()
             .setAppName("BFR Clustering")
