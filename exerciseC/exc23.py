@@ -91,9 +91,9 @@ class BFR:
         self.seed: int = seed
         self.sc: SparkContext = sc
         self.centroid_mult:int = 4
-        self.few_points_threshold: int = 10
+        self.few_points_threshold: int = 3
 
-    def fit(self,data: RDD[tuple[int,ndarray]], dim: int, n_points_per_iteration:int=1000) -> list["SummaryCluster"]:
+    def fit(self,data: RDD[tuple[int,ndarray]], dim: int, n_points_per_iteration:int=2000) -> list["SummaryCluster"]:
         """
         Fit the BFR model to the data.
         
@@ -118,7 +118,10 @@ class BFR:
         kmeans = KMeans.train(points, self.k * self.centroid_mult, seed=self.seed, distanceMeasure="euclidean")
         labels = bag.map(lambda x: (kmeans.predict(x[1]),(x[0],x[1])))
         
-        clusters = labels.groupByKey()
+        acc: dict[int,list[tuple[int,ndarray]]] = {}
+        for predict , d in labels.collect():
+            acc[predict] = acc.get(predict,[]) + [d]
+        clusters = self.sc.parallelize(list(acc.items()))
         
         # 3. Among the result clusters from step 2, move all the clusters that contain only one or very few points
         # to RS as the outliers.
@@ -132,8 +135,12 @@ class BFR:
         inlier_points_real = inlier_points.map(lambda x: x[1])
         kmeans_inlier = KMeans.train(inlier_points_real, self.k, seed=self.seed, distanceMeasure="euclidean")
         labels_inlier = inlier_points.map(lambda x: (kmeans_inlier.predict(x[1]),(x[0],x[1])))
-        clusters_inlier = labels_inlier.groupByKey()
         
+        acc2: dict[int,list[tuple[int,ndarray]]] = {}
+        for predict , d in labels_inlier.collect():
+            acc2[predict] = acc2.get(predict,[]) + [d]
+        clusters_inlier = self.sc.parallelize(list(acc2.items()))
+            
         # 5. Use these K clusters as DS. Discard these points and generate the DS statistics
         self.DSs = clusters_inlier.map(lambda x: SummaryCluster(
             len(x[1]),
@@ -148,8 +155,12 @@ class BFR:
         outlier_points_real = outlier_points.map(lambda x: x[1])
         kmeans_outlier = KMeans.train(outlier_points_real, self.k * self.centroid_mult, seed=self.seed, distanceMeasure="euclidean")
         labels_outlier = outlier_points.map(lambda x: (kmeans_outlier.predict(x[1]),(x[0],x[1])))
-        clusters_outlier = labels_outlier.groupByKey()
         
+        acc3: dict[int,list[tuple[int,ndarray]]] = {}
+        for predict , d in labels_outlier.collect():
+            acc3[predict] = acc3.get(predict,[]) + [d]
+        clusters_outlier = self.sc.parallelize(list(acc3.items()))
+    
         # 7. Generate CS and their statistics from the clusters with more than one data
         # point and use the remaining as new RS
         outlier_outliers_clusters = clusters_outlier.filter(lambda x: len(x[1]) < 2)
@@ -202,10 +213,9 @@ class BFR:
                 else:
                     return (point_id, (None, point))
                 
-            def update_cluster(x: tuple[int, Iterable[tuple[int, tuple[int, ndarray]]]],cl_b: Broadcast[list]):
+            def update_cluster(x: tuple[int, Iterable[tuple]],cl_b: Broadcast[list[tuple[ndarray, ndarray, int, tuple[int, ndarray, ndarray, list[int]]]]]):
                 fp , it = x
-                cur_cluster = [cdata for _ , _ , fp2 , cdata in cl_b if fp == fp2 ]
-                cur_cluster = cl_b.value[cur_cluster][3]
+                cur_cluster = [cdata for _ , _ , fp2 , cdata in cl_b.value if fp == fp2 ][0]
                 cluster = SummaryCluster(
                     cur_cluster[0],
                     cur_cluster[1],
@@ -257,8 +267,11 @@ class BFR:
             kmeans_rs = KMeans.train(rs_points, self.k * self.centroid_mult, seed=self.seed, distanceMeasure="euclidean")
             labels_rs = self.RS.map(lambda x: (kmeans_rs.predict(x[1]),(x[0],x[1])))
             
-            clusters_rs = labels_rs.groupByKey()
-            
+            acc4: dict[int,list[tuple[int,ndarray]]] = {}
+            for predict , d in labels_rs.collect():
+                acc4[predict] = acc4.get(predict,[]) + [d]
+            clusters_rs = self.sc.parallelize(list(acc4.items()))
+
             outliers_clusters_rs = clusters_rs.filter(lambda x: len(x[1]) < 2)
             inliers_clusters_rs = clusters_rs.filter(lambda x: len(x[1]) >= 2)
             
@@ -352,7 +365,7 @@ def main():
 
 if __name__ == "__main__":
     conf = (SparkConf()
-            .setAppName("BFR Clsutering")
+            .setAppName("BFR Clustering")
             .setMaster("local[16]")
             .set("spark.driver.memory", "8g")
     )
