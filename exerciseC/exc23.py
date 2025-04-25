@@ -93,7 +93,7 @@ class BFR:
         self.centroid_mult:int = 4
         self.few_points_threshold: int = 3
 
-    def fit(self,data: RDD[tuple[int,ndarray]], dim: int, n_points_per_iteration:int=2000) -> list["SummaryCluster"]:
+    def fit(self,data: RDD[tuple[int,ndarray]], dim: int, n_points_per_iteration:int=8000) -> list["SummaryCluster"]:
         """
         Fit the BFR model to the data.
         
@@ -178,7 +178,7 @@ class BFR:
         # The above steps finish the initialization of DS. So far, we have K DS, some number
         # of CS , and some number of RS 
         ndim = dim[1]
-        threshold_b = self.sc.broadcast((self.threshold) * (ndim ** 0.5))
+        threshold_b = self.sc.broadcast((self.threshold) * (ndim))
         
         for iter in range(number_of_points // n_points_per_iteration):
             print(f"Iteration {iter+1:6d}/{number_of_points // n_points_per_iteration}", end="\r")
@@ -232,7 +232,6 @@ class BFR:
             
             to_ds = comparasion.filter(lambda x: x[1][0] != None) 
             not_to_ds = comparasion.filter(lambda x: x[1][0] == None)
-            
             new_ds = to_ds.groupBy(
                 lambda x: x[1][0]
             ).map(
@@ -298,7 +297,7 @@ class BFR:
                 for j in range(i + 1, len(cs_list)):
                     if not merged_flags[j]:
                         cj = cs_list[j]
-                        if ci.mahalanobis_distance_another(cj) < self.threshold * (ndim ** 0.5):
+                        if ci.mahalanobis_distance_another(cj) < self.threshold * (ndim):
                             ci.merge(cj)
                             merged_flags[j] = True  
                 new_cs_list.append(ci)
@@ -347,21 +346,11 @@ def main():
     bfr = BFR(sc,k=args.num_clusters)
     res = bfr.fit(rdd_ndarrays,data.shape)
     
-    with open("output.txt") as f:
+    with open("output.txt","w") as f:
         i = 0
         for c in res:
             i = i + 1
-            f.write(f"{i}={str(c.points_index)}")
-    
-    for i, cluster in enumerate(res):
-        print(f"Cluster {i}:")
-        print(f"  Centroid: {cluster['centroid']}")
-        print(f"  Radius: {cluster['radius']}")
-        print(f"  Diameter: {cluster['diameter']}")
-        print(f"  Density (radius): {cluster['density_r']}")
-        print(f"  Density (diameter): {cluster['density_d']}")
-        print(f"  Number of points: {cluster['n_points']}")
-        print()
+            f.write(f"{i}={str(c.points_index)}\n")
 
 if __name__ == "__main__":
     conf = (SparkConf()
