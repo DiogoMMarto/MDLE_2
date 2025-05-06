@@ -1,5 +1,37 @@
+"""
+Spark-submit Python script to implement the BFR (Bradley-Fayyad-Reina) clustering algorithm 
+for large-scale distributed clustering using Spark.
+
+Usage:
+    spark-submit exc2.py <input_file_data> [-k <num_clusters>]
+
+<input_file_data> should be a CSV file with the header:
+    <index>,<feature_1>,<feature_2>,...,<feature_n>
+
+The script performs the following steps:
+1. Reads the input data file and preprocesses it to extract features.
+2. Initializes the BFR clustering algorithm with the specified number of clusters (default: 11).
+3. Iteratively clusters the data into three sets:
+   - DS (Discard Set): Clusters with sufficient statistics for points assigned to them.
+   - CS (Compression Set): Intermediate clusters for points not assigned to DS.
+   - RS (Retained Set): Outliers or points not assigned to DS or CS.
+4. Merges clusters based on Mahalanobis distance and updates the DS, CS, and RS sets.
+5. Outputs the final clusters to a text file, where each line contains the indices of points in a cluster.
+
+Parameters:
+    -k, --num_clusters: Number of clusters to form (default: 11).
+
+Output:
+    The final clusters are written to "output.txt", with each line representing a cluster and 
+    containing the indices of the points in that cluster.
+
+Author: Diogo Marto
+Date: 25-04-2025
+
+Code written with help from automatic code generation tools namely GitHub Copilot.
+"""
+
 import argparse
-import inspect
 import numpy as np
 from pyspark import Broadcast, SparkConf, SparkContext , RDD
 from pyspark.sql import SparkSession

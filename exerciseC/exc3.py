@@ -1,8 +1,37 @@
+"""
+This script analyzes clusters of tracks and identifies the top genres within each cluster 
+using Spark for distributed data processing.
+
+Usage:
+    spark-submit exc3.py <input_file_out> <input_file_tracks> <input_file_genres>
+
+Arguments:
+    <input_file_out>    Path to the output file containing cluster assignments.
+    <input_file_tracks> Path to the CSV file containing track data.
+    <input_file_genres> Path to the CSV file containing genre data.
+
+The script performs the following steps:
+1. Loads cluster assignments from the output file.
+2. Loads track data and extracts genre information for each track.
+3. Loads genre metadata to map genre IDs to their names.
+4. Joins cluster assignments with track and genre data.
+5. Counts the occurrences of each genre within each cluster.
+6. Ranks genres within each cluster and identifies the top 10 genres per cluster.
+7. Outputs the results, showing the top genres for each cluster.
+
+Output:
+    The top genres for each cluster are displayed in the console.
+
+Author: Diogo Marto
+Date: 25-04-2025
+
+Code written with help from automatic code generation tools namely GitHub Copilot.
+"""
 import pandas as pd
 from pyspark.sql import SparkSession
 import argparse
 from pyspark.sql.functions import col, udf, explode, count, desc, row_number, struct, collect_list
-from pyspark.sql.types import ArrayType, StringType, IntegerType
+from pyspark.sql.types import ArrayType, IntegerType
 from pyspark.sql.window import Window
 import ast
 

@@ -1,0 +1,2 @@
+the optimal number of clusters appeared to be 11 for me given the elbow rule. 
+I also filtered by the mean of the features to make the results more clean.

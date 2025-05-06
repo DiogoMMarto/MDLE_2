@@ -1,3 +1,32 @@
+"""
+This script performs cluster analysis on a given dataset using Agglomerative Clustering. 
+It computes various metrics for each cluster, such as radius, diameter, and density, 
+and visualizes the results for different numbers of clusters (k).
+
+Key functionalities:
+1. Reads two input CSV files: one containing the data and another containing track information.
+2. Filters and preprocesses the data based on specific criteria.
+3. Applies Agglomerative Clustering for a range of cluster numbers (k = 8 to 16).
+4. Computes metrics for each cluster, including:
+   - Number of points in the cluster
+   - Radius and diameter of the cluster
+   - Density based on radius and diameter
+5. Aggregates and averages the metrics for each value of k.
+6. Outputs the results and visualizes the metrics (radius, diameter, and densities) 
+   as a function of the number of clusters.
+
+The script is designed to be run from the command line with the following arguments:
+- `input_file`: Path to the main data file.
+- `input_file_2`: Path to the track file.
+
+The results are displayed in the console and visualized using matplotlib.
+
+Author: Diogo Marto 
+Date: 25-04-2025
+
+Code written with help from automatic code generation tools namely github copilot.
+"""
+
 import numpy as np
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
